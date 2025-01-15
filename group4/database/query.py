@@ -65,10 +65,58 @@ def fetch_row_by_PRIMARY_KEY(mydb, table_name, id):
 
 import mysql.connector as mysql
 
-def g4updateUser(mydb, username, newAttribute):
+def g4saveResult(mydb, userid, readingid, date, score):
     my_cursor = mydb.cursor()
     
-    q = "UPDATE g4users set " + str(newAttribute) + " " 
+    q = "INSERT INTO g4results(readinId, userid, date, score) VALUES(%s, %s, %s, %s)"
+    
+    try:
+        my_cursor.execute(q, (readingid, userid, date, score))
+        mydb.commit()
+    except Exception as e:
+        print("NU UH ", e)
+    finally:
+        my_cursor.close()
+
+def g4joinReadinResult(mydb):
+    my_cursor = mydb.cursor()
+    
+    q = "SELECT * FROM g4readings INNER JOIN g4results ON g4readings.id=g4results.readinId;"
+    try:
+        my_cursor.execute(q)
+        res = my_cursor.fetchall()
+        return res
+    except Exception as e:
+        print("NU UH ", e)
+    finally:
+        my_cursor.close()
+
+def g4savetip(mydb, title, description, username, file1=None):
+    my_cursor = mydb.cursor()
+    
+    q = "INSERT INTO g4educationalContent(username, title, file, description) VALUES(%s, %s, %s, %s)"
+    
+    try:
+        my_cursor.execute(q, (username, title, file1, description))
+        mydb.commit()
+    except Exception as e:
+        print("NU UH ", e)
+    finally:
+        my_cursor.close()
+
+def g4updateUser(mydb, id, newAttribute, newValue):
+    my_cursor = mydb.cursor()
+    
+    q = "UPDATE g4users SET " + str(newAttribute) + " = " + str(newValue) + " WHERE (id = " + str(id) + ");"
+    print(q)
+    try:
+        my_cursor.execute(q)
+        mydb.commit()
+        print("DONE!")
+    except Exception as e:
+        print("NU UH ", e)
+    finally:
+        my_cursor.close()
 
 def g4saveReading(mydb, context, q1body, q1cans, q1wans1, q1wans2, q1wans3, q2body, q2cans, q2wans1, q2wans2, q2wans3, q3body, q3cans, q3wans1, q3wans2, q3wans3, title, lvl):
     my_cursor = mydb.cursor()
@@ -103,18 +151,18 @@ def g4fetchall(mydb, tableName):
 
         
 
-def g4saveUser(mydb, name, email, dateOfBirth, username, password, usertype, lvl):
+def g4saveUser(mydb, name, email, dateOfBirth, username, password, usertype, lvl, date):
     my_cursor = mydb.cursor()
 
     # دستور SQL برای اضافه کردن کاربر
     add_user_query = """
-    INSERT INTO g4users (name, email, dateOfBirth, username, password, type, lvl)
-    VALUES (%s, %s, %s, %s, %s, %s, %s);
+    INSERT INTO g4users (create_time, name, email, dateOfBirth, username, password, type, lvl)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
     
     add_teacher_query =  """
-    INSERT INTO g4users (name, email, dateOfBirth, username, password, type)
-    VALUES (%s, %s, %s, %s, %s, %s);
+    INSERT INTO g4users (create_time, name, email, dateOfBirth, username, password, type)
+    VALUES (%s, %s, %s, %s, %s, %s, %s);
     """
     # print("inp")
     # print(name, email, dateOfBirth, username, password, usertype, lvl)
@@ -128,11 +176,11 @@ def g4saveUser(mydb, name, email, dateOfBirth, username, password, usertype, lvl
                 lvl = 2
             elif lvl == "advanced":
                 lvl = 3
-            my_cursor.execute(add_user_query, (name, email, dateOfBirth, username, password, usertype, lvl))
+            my_cursor.execute(add_user_query, (date, name, email, dateOfBirth, username, password, usertype, lvl))
         else:
             print("HERE?!")
             lvl = 0
-            my_cursor.execute(add_teacher_query, (name, email, dateOfBirth, username, password, usertype))
+            my_cursor.execute(add_teacher_query, (date, name, email, dateOfBirth, username, password, usertype))
             
         mydb.commit() # تایید تغییرات
         print("User saved successfully.")
