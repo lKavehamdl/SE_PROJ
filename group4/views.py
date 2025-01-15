@@ -7,7 +7,6 @@ import base64
 from datetime import date
 from datetime import time
 # Create your views here.
-
 user2 = ""
 username2 = ""
 readingId2 = ""

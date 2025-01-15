@@ -22,5 +22,4 @@ urlpatterns = [
   path('seeReports/', views.g4seeReports, name="g4seeReports"),
   path('redirectToDashboard/', views.g4redirectToDashboard, name="g4redirectToDashboard"),
   path('redirectToTeacherDashboard/', views.g4redirectToTeacherDashboard, name="g4redirectToTeacherDashboard"),
-  
 ] 
