@@ -1,0 +1,45 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Content - ReadingApp</title>
+    <link rel="stylesheet" href="{%static 'styles.css'%}">
+</head>
+<body>
+    <!-- Header / Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">ReadingApp</div>
+            <ul class="nav-links">
+                <li><a href="{%url 'group4:g4redirectToDashboard'%}">Dashboard</a></li>
+                <li><a href="{%url 'group4:g4logout'%}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-container">
+        <section id="content">
+            <h1>Educational Content</h1>
+            <p>Explore articles, videos, and materials to enhance your reading skills.</p>
+            <div class="content-list">
+                <!-- Content Card 1 (Video) -->
+                {% for cont in contents %}
+                    <div class="content-card">
+                        <h2>{{cont.title}}</h2>
+                        <p>{{cont.description}}</p>
+                        <a href="{%url 'group4:g4tip' cont.id%}" class="btn primary">Read More</a>
+                    </div>
+                {%endfor%}
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 ReadingApp. All rights reserved.</p>
+    </footer>
+</body>
+</html>
