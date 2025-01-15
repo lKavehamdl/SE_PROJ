@@ -1,17 +1,17 @@
-{% load static %}
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - ReadingApp</title>
-    <link rel="stylesheet" href="{% static 'styles.css'%}">
+    <link rel="stylesheet" href="{%static 'styles.css' %}">
 </head>
 <body>
     <div class="signup-container">
         <h1>Sign Up</h1>
         <form action="{%url 'group4:g4signup'%}" method="POST">
-            {%csrf_token%}
+            {% csrf_token %}
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
@@ -32,7 +32,16 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+
             <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type" name="type" required onchange="toggleUserLevel()">
+                    <option value="Student">Student</option>
+                    <option value="Teacher">Teacher</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="level-group">
                 <label for="level">User Level</label>
                 <select id="level" name="level" required>
                     <option value="beginner">Beginner</option>
@@ -40,21 +49,34 @@
                     <option value="advanced">Advanced</option>
                 </select>
             </div>
-            
-            <div class="form-group">
-                <label for="type">Type</label>
-                <select id="type" name="type" required>
-                    <option value="Teacher">Teacher</option>
-                    <option value="Student">Student</option>
-                </select>
-            </div>
 
             <!-- Error Message Section -->
             <div id="error-message" class="error-message"></div>
 
-            <button type="submit" class="btn primary">Sign Up</button>
+            <button type="submit" class="btn primary" style="margin-left: 25%;">Sign Up</button>
 
-            <p>Already have an account? <a href="login.html">Login</a></p>
+            <p>Already have an account? <a href="{%url 'group4:g4login'%}">Login</a></p>
+
+
+            <script>
+                function toggleUserLevel() {
+                    const typeSelect = document.getElementById('type');
+                    const levelGroup = document.getElementById('level-group');
+                    if (typeSelect.value === 'Teacher') {
+                        levelGroup.style.display = 'none';
+                        document.getElementById('level').removeAttribute('required');
+                    } else {
+                        levelGroup.style.display = 'block';
+                        document.getElementById('level').setAttribute('required', 'required');
+                    }
+                }
+        
+                // Initialize the form state
+                document.addEventListener('DOMContentLoaded', function() {
+                    toggleUserLevel();
+                });
+            </script>
+
         </form>
     </div>
 </body>
